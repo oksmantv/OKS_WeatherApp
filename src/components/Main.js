@@ -30,14 +30,13 @@ const Main = () => {
 
         if(Query.length !== 0)
         {
+        setErrorText("")
         fetch(`${URL}forecast?q=${Query}&units=metric&appid=${API_KEY}`)
         .then(res => res.json())
         .then(response => {
-            console.log(response);
             let WeekData = response.list.filter(info => info.dt_txt.includes("18:00:00"));
-            console.log(WeekData);
             setWeek(WeekData); 
-        }).catch(error => { setErrorText(error); console.log("Error: " + error)})
+        }).catch(error => { setErrorText(error); })
         }
         else{ setErrorText("Must input into searchbar")}
     }
@@ -48,17 +47,27 @@ const Main = () => {
             event.preventDefault();
             setQuery(event.target.elements.query.value)
         }
-    if(Query.length !== 0)
-    {
-        fetch(`${URL}weather?q=${Query}&units=metric&appid=${API_KEY}`)
-        .then(res => res.json())
-        .then(result => {
-            setToday(result);
-            getForecast();
-            setQuery('');
-        })
-    }
-    else{ setErrorText("Must input into searchbar")}          
+            if(Query.length !== 0)
+            {
+                setErrorText("")
+                fetch(`${URL}weather?q=${Query}&units=metric&appid=${API_KEY}`)
+                .then(res => res.json())
+                .then(result => {
+
+                    if(result.cod !== "404")
+                    {
+                        setToday(result);
+                        getForecast();
+                        setQuery('');
+                    }
+                    else
+                    {
+                        setErrorText(`Error ${result.cod} - ${result.message}`);
+                    }
+
+                }).catch(error => { setErrorText(error); })
+            }
+            else{ setErrorText("Must input into searchbar..")}          
     }
 
     return (
@@ -79,7 +88,8 @@ const Main = () => {
                                         value={Query}
                                         onChange={(e) => setQuery(e.target.value)}     
                                     />
-                                    <span>{ErrorText}</span>
+                                    <span className="red-text">{ErrorText}</span>
+                                    <br/><br/>
                                     <button className="waves-effect waves-light btn-small orange">Search</button>
                                 </form>
                                 </div>   
