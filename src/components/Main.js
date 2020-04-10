@@ -11,11 +11,22 @@ const Main = () => {
     let [Query, setQuery] = useState("Stockholm");
     let [Today, setToday] = useState();
     let [Week, setWeek] = useState([]);
+    let [Time,setTime] = useState ();
     let [ErrorText,setErrorText] = useState();
+
+    function getDateandTime(){
+
+            let now = new Date();
+            let date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+            let time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+            let datetime = date+' '+time;
+            setTime(datetime);      
+    }
 
     useState(() => {
         getForecast();
         getWeather();
+        
     });
 
     function presentCards (Days) {
@@ -23,20 +34,20 @@ const Main = () => {
     }
 
     function presentCard (Today) {
-        return (<DisplayCard day={Today}/>)
+        return (<DisplayCard day={Today} time={Time}/>)
     }
 
     function getForecast() {
 
         if(Query.length !== 0)
         {
-        setErrorText("")
-        fetch(`${URL}forecast?q=${Query}&units=metric&appid=${API_KEY}`)
-        .then(res => res.json())
-        .then(response => {
-            let WeekData = response.list.filter(info => info.dt_txt.includes("18:00:00"));
-            setWeek(WeekData); 
-        }).catch(error => { setErrorText(error); })
+            setErrorText("")
+            fetch(`${URL}forecast?q=${Query}&units=metric&appid=${API_KEY}`)
+            .then(res => res.json())
+            .then(response => {
+                let WeekData = response.list.filter(info => info.dt_txt.includes("18:00:00"));
+                setWeek(WeekData); 
+            }).catch(error => { setErrorText(error); })
         }
         else{ setErrorText("Must input into searchbar")}
     }
@@ -56,6 +67,8 @@ const Main = () => {
 
                     if(result.cod !== "404")
                     {
+                        console.log(result);
+                        getDateandTime();
                         setToday(result);
                         getForecast();
                         setQuery('');

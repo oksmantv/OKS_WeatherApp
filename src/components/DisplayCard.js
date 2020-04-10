@@ -3,7 +3,9 @@ import React from 'react';
 import { min } from 'moment';
 var moment = require('moment');
 
-const DisplayCard = ({ day }) => {
+const DisplayCard = ({ day , time }) => {
+
+  console.log(time);
 
   let img = undefined;
   if(day !== undefined)
@@ -21,12 +23,11 @@ const DisplayCard = ({ day }) => {
         <div className="card left">
             <i className={img}></i> 
             {
-              /*console.log(day.main.temp),
-              console.log(imgURL),
-              console.log(day.weather[0].description)*/
+              console.log(day.name)
             }
             <div className="">
             <p>Current Weather: {day.name}</p>
+            <p>{time}</p>
             <p>Temperature: {Math.round(day.main.temp)}°C ({Math.round(day.main.feels_like)}°C)</p>
             </div>
           </div> 

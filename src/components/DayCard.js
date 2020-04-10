@@ -12,8 +12,6 @@ const DayCard = ({ day }) => {
   {  
     if(day.length !== 0)
     {    
-
-      //console.log(day.main.temp_min,"<-->",day.main.temp_max)
       weekday = day.dt * 1000
       newDate.setTime(weekday)
       img = `owf owf-${day.weather[0].id} blue-text owf-5x`
